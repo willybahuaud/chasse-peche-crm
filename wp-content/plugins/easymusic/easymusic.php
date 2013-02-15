@@ -54,9 +54,28 @@ function nbm_register_songs() {
 //compositeur, interpret, anne
 //taxo type music
 	// ADD A SPECIFIC IMAGE SIZE
-	add_image_size( 'nbm-size', 100, 100, true );
+	add_image_size( 'em-size', 100, 100, true );
 }
-add_action( 'init', 'nbm_register_places' );
+add_action( 'init', 'em_register_songs' );
+
+
+/**
+CONNEXION SOUNDCLOUD
+*/
+
+
+function em_connexion_sound_cloud() {
+	wp_enqueue_script('jquery');
+
+	wp_enqueue_script(
+		'connectsound',
+		plugins_url('/js/connectsound.js', __FILE__),
+		array('jquery')
+
+	);
+}    
+ 
+add_action('wp_enqueue_scripts', 'em_ConnexionSoundCloud');
 
 /*
 titre
