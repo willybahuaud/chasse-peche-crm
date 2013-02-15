@@ -47,7 +47,7 @@ function nbm_register_songs() {
 				'view_item'     => __( 'View song', 'em' )
 				),
 			'public' 	=> true,
-			'supports' 	=> array( 'title', 'editor', 'thumbnail', 'excerpt' )
+			'supports' 	=> array( 'title', 'editor', 'thumbnail' )
 			);
 		register_post_type( 'songs', apply_filters( 'songs_args', $songs_args ) ); 
 	}
@@ -77,25 +77,3 @@ function em_connexion_sound_cloud() {
  
 add_action('wp_enqueue_scripts', 'em_ConnexionSoundCloud');
 
-/*
-titre
-artiste,
-album,
-année album,
-numero de piste,
-genre,
-vitesse,
-durée de la chanson,
-transcript (text),
-date de mise en ligne,
-provider,
-format (mp3,mp4,ogv),
-editeur,
-tags,
-type encodage,
-date de création de la chanson,
-date publication album,
-awards,
-url,
-excerpt
-*/
