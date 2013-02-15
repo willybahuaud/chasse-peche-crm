@@ -21,7 +21,7 @@ DEFINE( 'EM_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 LOAD EASY MUSIC
 */
 
-function nbm_lang_init() {
+function em_lang_init() {
 	load_plugin_textdomain( 'em', false, basename( dirname( __FILE__ ) ) . '/languages/' );
 }
 add_action( 'init', 'em_lang_init' );
@@ -33,7 +33,7 @@ CREATE SONGS CPT
 * @uses em_post_type FILTER HOOK to target an existing post type instead creating one
 * @uses songs_args FILTER HOOK to modify songs property 
 */
-function nbm_register_songs() {
+function em_register_songs() {
 	if( apply_filters( 'em_post_type', 'songs' ) == 'songs' ) {
 		$places_args = array(
 			'label' => __( 'Songs', 'em' ),
