@@ -1,3 +1,11 @@
+<audio controls>
+  <source src="horse.ogg" type="audio/ogg">
+  <source src="horse.mp3" type="audio/mpeg">
+  Votre navigateur ne supporte par le champs audio.
+</audio> 
+
+
+
 <!-- Render fichier audio de base-->
 <div itemscope itemtype="http://schema.org/AudioObject">
   <!--Nom du fichier avec son extensipon-->
