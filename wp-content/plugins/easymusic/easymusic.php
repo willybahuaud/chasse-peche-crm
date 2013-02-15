@@ -15,6 +15,7 @@ DEFINE
 */
 
 DEFINE( 'EM_PLUGIN_URL', trailingslashit( WP_PLUGIN_URL ) . basename( dirname( __FILE__ ) ) );
+DEFINE( 'EM_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
 /**
 LOAD EASY MUSIC
@@ -58,6 +59,10 @@ function nbm_register_songs() {
 }
 add_action( 'init', 'em_register_songs' );
 
+/**
+METABOXES
+*/
+include( EM_PLUGIN_PATH . 'metaboxes.php');
 
 /**
 CONNEXION SOUNDCLOUD
