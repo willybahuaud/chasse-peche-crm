@@ -62,7 +62,7 @@ add_action( 'init', 'em_register_songs' );
 /**
 METABOXES
 */
-include( EM_PLUGIN_PATH . 'metaboxes.php');
+include( EM_PLUGIN_PATH . 'metaboxes.php' );
 
 /**
 CONNEXION SOUNDCLOUD
@@ -70,15 +70,16 @@ CONNEXION SOUNDCLOUD
 
 
 function em_connexion_sound_cloud() {
-	wp_enqueue_script('jquery');
-
-	wp_enqueue_script(
+	wp_register_script(
 		'connectsound',
 		plugins_url('/js/connectsound.js', __FILE__),
-		array('jquery')
-
+		array( 'jquery' ), '1.0', true );
 	);
+	wp_register_script( 'tinysong', EM_PLUGIN_URL . '/em_get_songs_datas.js', array( 'jquery' ), $ver = false, $in_footer = false);
+
+	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'tinysong' );
 }    
  
-add_action('wp_enqueue_scripts', 'em_ConnexionSoundCloud');
+add_action('wp_enqueue_scripts', 'em_connexion_sound_cloud');
 
