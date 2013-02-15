@@ -47,7 +47,7 @@ function nbm_register_songs() {
 				'view_item'     => __( 'View song', 'em' )
 				),
 			'public' 	=> true,
-			'supports' 	=> array( 'title', 'editor', 'thumbnail' )
+			'supports' 	=> array( 'title', 'editor', 'thumbnail', 'excerpt' )
 			);
 		register_post_type( 'songs', apply_filters( 'songs_args', $songs_args ) ); 
 	}
@@ -58,3 +58,25 @@ function nbm_register_songs() {
 }
 add_action( 'init', 'nbm_register_places' );
 
+/*
+titre
+artiste,
+album,
+année album,
+numero de piste,
+genre,
+vitesse,
+durée de la chanson,
+transcript (text),
+date de mise en ligne,
+provider,
+format (mp3,mp4,ogv),
+editeur,
+tags,
+type encodage,
+date de création de la chanson,
+date publication album,
+awards,
+url,
+excerpt
+*/
