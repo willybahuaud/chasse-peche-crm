@@ -100,9 +100,9 @@ function em_save_metaboxes( $post_ID ) {
 			update_post_meta( $post_ID, '_em_awards', $em_awards );
 		}
 
-		if( isset( $_POST[ 'em_transcript' ] ) ) {
+		if( isset( $_POST[ 'transcript' ] ) ) {
 			check_admin_referer( 'em_songs-save_' . $_POST[ 'post_ID' ], 'em_songs-nonce' );
-			$transcript = sanitize_text_field( $_POST[ 'em_transcript' ] );
+			$transcript = sanitize_text_field( $_POST[ 'transcript' ] );
 			update_post_meta( $post_ID, '_em_transcript', $transcript );
 		}
 
@@ -180,13 +180,7 @@ function em_url($post){
 
 function em_transcript($post){
 	$em_transcript = get_post_meta($post->ID,'_em_transcript',true);
-
-
 	wp_nonce_field( 'em_transcript-save_'.$post->ID, 'em_transcript-nonce' );
-	echo '<textarea style="width:100%;" name="em_transcript" value="'.$em_transcript.'">Lyrics</textarea><br />';
-
-
-
-
+	wp_editor($em_transcript, 'transcript' );
 }
 
