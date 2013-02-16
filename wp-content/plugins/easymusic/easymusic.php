@@ -27,14 +27,18 @@ function em_lang_init() {
 add_action( 'init', 'em_lang_init' );
 
 /**
-CREATE SONGS CPT
-* @uses em_register_songs FUNCTION to register the CPT
+CREATE SONGS, PLAYLIST & TAXONOMIES
+* @uses em_register_cpt FUNCTION to register the CPT
 
-* @uses em_post_type FILTER HOOK to target an existing post type instead creating one
+* @uses em_songs_post_type FILTER HOOK to target an existing post type instead creating one
 * @uses songs_args FILTER HOOK to modify songs property 
+* @uses em_playlist_post_type FILTER HOOK to target an existing post type instead creating one
+* @uses playlists_args FILTER HOOK to modify songs property 
 */
-function em_register_songs() {
-	if( apply_filters( 'em_post_type', 'songs' ) == 'songs' ) {
+function em_register_cpt() {
+
+	//SONGS
+	if( apply_filters( 'em_songs_post_type', 'songs' ) == 'songs' ) {
 		$songs_args = array(
 			'label' => __( 'Songs', 'em' ),
 			'labels' => array(
@@ -52,46 +56,9 @@ function em_register_songs() {
 			);
 		register_post_type( 'songs', apply_filters( 'songs_args', $songs_args ) ); 
 	}
-//compositeur, interpret, anne
-//taxo type music
-	// ADD A SPECIFIC IMAGE SIZE
-	add_image_size( 'em-size', 100, 100, true );
-}
-add_action( 'init', 'em_register_songs' );
 
-/**
-METABOXES
-*/
-include( EM_PLUGIN_PATH . 'metaboxes.php');
-
-/**
-CONNEXION SOUNDCLOUD
-*/
-
-
-function em_connexion_sound_cloud() {
-	wp_register_script(
-		'connectsound',
-		plugins_url('/js/connectsound.js', __FILE__),
-		array( 'jquery' ), '1.0', true
-	);
-
-	wp_enqueue_script( 'jquery' );
-}    
- 
-add_action('wp_enqueue_scripts', 'em_connexion_sound_cloud');
-
-
-
-/**
-CREATE PLAYLISTS
-* @uses em_register_places FUNCTION to register the CPT
-
-* @uses em_post_type FILTER HOOK to target an existing post type instead creating one
-* @uses places_args FILTER HOOK to modify places property 
-*/
-function em_register_playlists() {
-	if( apply_filters( 'em_post_type', 'playlists' ) == 'playlists' ) {
+	//PLAYLISTS
+	if( apply_filters( 'em_playlist_post_type', 'playlists' ) == 'playlists' ) {
 		$playlists_args = array(
 			'label' => __( 'Playlists', 'em' ),
 			'labels' => array(
@@ -110,11 +77,59 @@ function em_register_playlists() {
 		register_post_type( 'playlists', apply_filters( 'playlists_args', $playlists_args ) ); 
 	}
 
+	//GENRE
+	$em_genre_args = array(
+		'label' => __( 'music-genre', 'em' ),
+		'labels' => array(
+			'name' => __( 'Musical genre', 'em' )
+			),
+		'public' => true,
+		'hierarchical' => true
+		);
+	register_taxonomy('em_genre', array( apply_filters( 'em_album_post_type', 'songs' ), apply_filters( 'em_songs_post_type', 'songs' ) ), apply_filters( 'em_genre_args', $em_genre_args ) );
+
+	//ARTIST
+	$em_artist_args = array(
+		'label' => __( 'artist', 'em' ),
+		'labels' => array(
+			'name' => __( 'Artist', 'em' )
+			),
+		'public' => true,
+		'hierarchical' => false
+		);
+	register_taxonomy('em_artist', array( apply_filters( 'em_album_post_type', 'songs' ), apply_filters( 'em_songs_post_type', 'songs' ) ), apply_filters( 'em_artist_args', $em_artist_args ) );
+
+	//ALBUM
+	$em_album_args = array(
+		'label' => __( 'album', 'em' ),
+		'labels' => array(
+			'name' => __( 'Album', 'em' )
+			),
+		'public' => true,
+		'hierarchical' => false
+		);
+	register_taxonomy('em_album', array( apply_filters( 'em_album_post_type', 'songs' ), apply_filters( 'em_songs_post_type', 'songs' ) ), apply_filters( 'em_album_args', $em_album_args ) );
+
 	// ADD A SPECIFIC IMAGE SIZE
 	add_image_size( 'em-size', 100, 100, true );
 }
-add_action( 'init', 'em_register_playlists' );
+add_action( 'init', 'em_register_cpt' );
 
+/**
+METABOXES
+*/
+include( EM_PLUGIN_PATH . 'metaboxes.php');
 
-
-
+/**
+CONNEXION SOUNDCLOUD
+*/
+function em_connexion_sound_cloud() {
+	wp_register_script(
+		'connectsound',
+		plugins_url('/js/connectsound.js', __FILE__),
+		array( 'jquery' ), '1.0', true
+	);
+	wp_enqueue_script( 'jquery' );
+}    
+ 
+add_action('wp_enqueue_scripts', 'em_connexion_sound_cloud');
