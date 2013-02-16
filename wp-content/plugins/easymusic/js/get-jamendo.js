@@ -7,8 +7,12 @@ jQuery(document).ready(function($){
 			url:'http://api.jamendo.com/get2/id+name/' + searchType + '/jsonpretty/?searchquery=' + searchQuery,
 			type:'POST',
 			success:function(data){
-				console.log(data);
-				// console.log(data[0].name);
+				// console.log(data);
+				var obj = new Array;
+				for(var i = 0; i < data.length; i++){
+					obj.push('<a href="#">' + data[i].name + '</a>');
+				}
+				console.log(obj);
 			}
 		});
 	});
