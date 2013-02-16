@@ -70,17 +70,20 @@ CONNEXION SOUNDCLOUD
 
 
 function em_connexion_sound_cloud() {
-	wp_enqueue_script('jquery');
-
-	wp_enqueue_script(
+	wp_register_script(
 		'connectsound',
 		plugins_url('/js/connectsound.js', __FILE__),
-		array('jquery')
-
+		array( 'jquery' ), '1.0', true );
 	);
+	wp_register_script( 'tinysong', EM_PLUGIN_URL . '/em_get_songs_datas.js', array( 'jquery' ), $ver = false, $in_footer = false);
+
+	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'tinysong' );
 }    
  
-add_action('wp_enqueue_scripts', 'em_ConnexionSoundCloud');
+add_action('wp_enqueue_scripts', 'em_connexion_sound_cloud');
+
+
 
 /**
 CREATE PLAYLISTS
@@ -115,126 +118,5 @@ function em_register_playlists() {
 add_action( 'init', 'em_register_playlists' );
 
 
-/**
-SAVES METABOXES
-* @uses nbm_save_metaboxes FUNCTION to save metaboxes
-*/
-function em_save_metaboxes( $post_ID ) { 
-	if( isset( $_POST[ 'em_address' ] ) ) {
-		check_admin_referer( 'em_coords-save_' . $_POST[ 'post_ID' ], 'em_coords-nonce' );
 
-		$address = $_POST[ 'em_address' ];
-		update_post_meta( $post_ID, '_em_address', $address );	
 
-		// manual coords ?
-		if( isset( $_POST[ 'em_do_u_define_coords' ] ) ) {		
-			update_post_meta( $post_ID, '_em_do_u_define_coords', 1 );	
-
-			// sexagesimales ?
-			if( ! empty( $_POST[ 'w_degres' ] ) && ! empty( $_POST[ 'w_minutes' ] ) && ! empty( $_POST[ 'w_secondes' ] ) && ! empty( $_POST[ 'n_degres' ] ) && ! empty( $_POST[ 'n_minutes' ] ) && ! empty( $_POST[ 'n_secondes' ] ) ) {
-				
-				// CACULATE LONG
-				// DEGRES + or - ?
-				if( $_POST[ 'w_degres' ] < 0 ) {
-					$longitude = -1*( -1*( intval( $_POST[ 'w_degres' ] ) ) + ( intval( $_POST[ 'w_minutes' ] )/60 ) + ( floatval( $_POST[ 'w_secondes' ] )/3600 ) );
-				} else {
-					$longitude = -1*( intval( $_POST[ 'w_degres' ] ) + ( intval( $_POST[ 'w_minutes' ] )/60 ) + ( floatval( $_POST[ 'w_secondes' ] )/3600 ) );
-				}
-				
-				// CALCULATE LAT
-				$latitude = ( intval( $_POST[ 'n_degres' ] ) ) + ( intval( $_POST[ 'n_minutes' ] )/60 ) + ( floatval( $_POST[ 'n_secondes' ] )/3600 );
-
-				$coords = array( 
-					'lat'  => trim( $latitude ), 
-					'long' => trim( $longitude ) 
-					);
-				update_post_meta( $post_ID, '_em_coords', $coords );
-
-				$coords_sexa = array(
-					'w_degres'   => $_POST[ 'w_degres' ],
-					'w_minutes'  => $_POST[ 'w_minutes' ],
-					'w_secondes' => $_POST[ 'w_secondes' ],
-					'n_degres'   => $_POST[ 'n_degres' ],
-					'n_minutes'  => $_POST[ 'n_minutes' ],
-					'n_secondes' => $_POST[ 'n_secondes' ]
-					);
-				update_post_meta( $post_ID, '_em_coords_sexa', $coords_sexa );
-
-			// decimales ?
-			} else {
-				$user_coords = explode( ',', trim( $_POST[ 'em_coords' ] ) );
-				$coords = array( 
-					'lat'  => trim( $user_coords[0] ), 
-					'long' => trim( $user_coords[1] ) 
-					);
-				update_post_meta( $post_ID, '_em_coords', $coords );
-			}
-		// auto coords
-		} else {
-			update_post_meta( $post_ID, '_em_do_u_define_coords', 0 );
-			$coords = em_get_coords( $address );
-
-			// COORDS RETURN A RESULT
-			if( $coords != '' )
-				update_post_meta( $post_ID, '_em_coords', $coords );
-		}
-	}
-	if( isset( $_POST[ 'em-colors' ], $_POST[ 'em-letters' ] ) ) {
-		check_admin_referer( 'em_icon-save_' . $_POST[ 'post_ID' ], 'em_icon-nonce' );
-		update_post_meta( $post_ID, '_em_icon', array( 
-			'color'  => $_POST[ 'em-colors' ], 
-			'letter' => $_POST[ 'em-letters' ] 
-			) );
-	}
-
-	if( isset( $_POST[ 'em_tel' ] ) ) {
-		check_admin_referer( 'em_infos-save_' . $_POST[ 'post_ID' ], 'em_infos-nonce' );
-		update_post_meta( $post_ID, '_em_tel', $_POST[ 'em_tel' ] );
-	}
-	if( isset( $_POST[ 'em_email' ] ) ) {
-		check_admin_referer( 'em_infos-save_' . $_POST[ 'post_ID' ], 'em_infos-nonce' );
-		update_post_meta( $post_ID, '_em_email', is_email( $_POST[ 'em_email' ] ) );
-	}
-	if( isset( $_POST[ 'em_website' ] ) ) {
-		check_admin_referer( 'em_infos-save_' . $_POST[ 'post_ID' ], 'em_infos-nonce' );
-		update_post_meta( $post_ID, '_em_website', esc_url( $_POST[ 'em_website' ] ) );
-	}
-	if( isset( $_POST[ 'em_hours' ] ) ) {
-		check_admin_referer( 'em_infos-save_' . $_POST[ 'post_ID' ], 'em_infos-nonce' );
-		update_post_meta( $post_ID, '_em_hours', esc_textarea( $_POST[ 'em_hours' ] ) );
-	}
-	if( isset( $_POST[ 'em_type_of_place' ] ) ) {
-		check_admin_referer( 'em_infos-save_' . $_POST[ 'post_ID' ], 'em_infos-nonce' );
-		update_post_meta( $post_ID, '_em_type_of_place', sanitize_html_class( $_POST[ 'em_type_of_place' ] ) );
-	}
-	if( isset( $_POST[ 'em_important' ] ) ) {
-		check_admin_referer( 'em_infos-save_' . $_POST[ 'post_ID' ], 'em_infos-nonce' );
-		if( $_POST[ 'em_important' ] == 'yes' ) {
-			$prev = get_option( 'em_important' );
-			update_post_meta( $prev, '_em_important', 2);
-
-			update_option( 'em_important', $post_ID );
-			update_post_meta( $post_ID, '_em_important', 1);
-		} else {
-			update_post_meta( $post_ID, '_em_important', 2);
-		}
-	}
-	if( isset( $_POST[ 'em-size' ] ) ) {
-		check_admin_referer( 'em_infos-save_' . $_POST[ 'post_ID' ], 'em_infos-nonce' );
-		switch( $_POST[ 'em-size' ] ) {
-			case 'large' :
-				$size = 'large';
-				break;
-			case 'medium' :
-				$size = 'medium';
-				break;
-			case 'small' :
-				$size = 'small';
-				break;
-			default: '';
-		}
-		update_post_meta( $post_ID, '_em_size', $size );
-	}
-	
-}
-add_action( 'save_post', 'em_save_metaboxes' ); 
