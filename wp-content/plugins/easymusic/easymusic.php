@@ -73,12 +73,10 @@ function em_connexion_sound_cloud() {
 	wp_register_script(
 		'connectsound',
 		plugins_url('/js/connectsound.js', __FILE__),
-		array( 'jquery' ), '1.0', true );
+		array( 'jquery' ), '1.0', true
 	);
-	wp_register_script( 'tinysong', EM_PLUGIN_URL . '/em_get_songs_datas.js', array( 'jquery' ), $ver = false, $in_footer = false);
 
 	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'tinysong' );
 }    
  
 add_action('wp_enqueue_scripts', 'em_connexion_sound_cloud');
