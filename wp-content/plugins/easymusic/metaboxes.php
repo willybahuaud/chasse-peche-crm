@@ -10,9 +10,9 @@ function em_create_metaboxes() {
 	add_meta_box( 'em_songs', __( 'Informations sur la chanson', 'em' ), 'em_songs', apply_filters( 'em_post_type', 'songs' ), 'normal', 'default' );
 	add_meta_box( 'em_transcript', __( 'Lyrics', 'em' ), 'em_transcript', apply_filters( 'em_post_type', 'songs' ), 'normal', 'default' );
 	add_meta_box( 'em_url', __( 'Chemin', 'em' ), 'em_url', apply_filters( 'em_post_type', 'songs' ), 'normal', 'default' );
-	add_meta_box( 'em_playlists', __( 'Informations sur la playlist', 'em' ), 'em_playlists', apply_filters( 'em_post_type', 'playlists' ), 'normal', 'default' );
-
-	add_meta_box('em_retrieve', __( 'Retrieve songs from Jamendo', 'em' ), 'em_retrieve', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
+	add_meta_box( 'em_information', __( 'Informations sur la playlist', 'em' ), 'em_information', apply_filters( 'em_post_type', 'playlists' ), 'normal', 'default' );
+	add_meta_box( 'em_retrieve', __( 'Retrieve songs from Jamendo', 'em' ), 'em_retrieve', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
+	add_meta_box( 'em_playlist', __( 'Playlists liées', 'em' ), 'em_playlist', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
 }
 add_action("admin_init", "em_create_metaboxes");
 
@@ -108,10 +108,17 @@ function em_save_metaboxes( $post_ID ) {
 			update_post_meta( $post_ID, '_em_transcript', $transcript );
 		}
 
-		if( isset( $_POST[ 'em_playlists' ] ) ) {
-			check_admin_referer( 'em_playlists-save_' . $_POST[ 'post_ID' ], 'em_playlists-nonce' );
-			$playlists = sanitize_text_field( $_POST[ 'em_playlists' ] );
-			update_post_meta( $post_ID, '_em_playlists', $playlists );
+
+		if( isset( $_POST[ 'playlist' ] ) ) {
+			check_admin_referer( 'em_songs-save_' . $_POST[ 'post_ID' ], 'em_songs-nonce' );
+			$playlist = sanitize_text_field( $_POST[ 'playlist' ] );
+			update_post_meta( $post_ID, '_em_playlist', $playlist );
+		}
+
+		if( isset( $_POST[ 'information' ] ) ) {
+			check_admin_referer( 'em_information-save_' . $_POST[ 'post_ID' ], 'em_information-nonce' );
+			$information = sanitize_text_field( $_POST[ 'information' ] );
+			update_post_meta( $post_ID, '_em_information', $information );
 		}
 
 		if( isset( $_POST[ 'em_url' ] ) ) {
@@ -119,6 +126,7 @@ function em_save_metaboxes( $post_ID ) {
 			$url = sanitize_text_field( $_POST[ 'em_url' ] );
 			update_post_meta( $post_ID, '_em_url', $url );
 		}
+
 }
 add_action( 'save_post', 'em_save_metaboxes' ); 
 
@@ -139,6 +147,7 @@ function em_songs($post){
 	$format             = get_post_meta( $post->ID, '_em_format', true );
 	$encode             = get_post_meta( $post->ID, '_em_encode', true );
 	$awards             = get_post_meta( $post->ID, '_em_awards', true );
+	
 
 
 
@@ -157,14 +166,53 @@ function em_songs($post){
 	echo '<label style="width:200px;display:inline-block;" for="em_format">Format : </label><input type="texte" id="em_format" name="em_format" value="' . $format . '"><br />';
 	echo '<label style="width:200px;display:inline-block;" for="em_encode">Encodage : </label><input type="texte" id="em_encode" name="em_encode" value="' . $encode . '"><br />';
 	echo '<label style="width:200px;display:inline-block;" for="em_awards">Awards : </label><input type="texte" id="em_awards" name="em_awards" value="' . $awards . '"><br />';
+	
 
 }
 
+function em_playlist ( $post ){
+	echo "Liste des playlists liées<br />";
+	$em_playlist = get_post_meta( $post->ID, '_em_playlist', true );
+	wp_nonce_field( 'em_playlist-save_' . $post->ID, 'em_playlist-nonce' );
 
-function em_playlists( $post ) {
-	$titre = get_post_meta( $post->ID, '_em_titre', true );
-	wp_nonce_field( 'em_playlists-save_' . $post->ID, 'em_playlists-nonce' );
-	echo '<input type="text" name="em_titre" value="' . $titre . '"><br />';
+	//REQUETE QUI RECUPERE LES PLAYLISTS LIEES A LA CHANSON
+
+	query_posts('post_per_page=-1&post_type=songs');
+		  	if (have_posts()) : 
+		    while (have_posts()) : the_post(); 
+				$title_playlist = the_title('','',false);
+				echo '<div class="tag_playlist">'.$em_playlist.'</div>'; 
+			endwhile; 
+		endif; 
+
+	echo '<hr>';
+
+	echo 'Lier à une playlist <br />';
+
+	//REQUETE QUI RECUPERE LES PLAYLISTS POUR LA LIAISON 
+
+	query_posts('posts_per_page=-1&post_type=playlists');
+	echo '<select style="width:250px;">'; // JE SAIS C CRADE
+	  	if (have_posts()) : 
+		    while (have_posts()) : the_post(); 
+				$title_playlist = the_title('','',false);
+				echo '<option name="em_playlist" value="'.$title_playlist.'">'.$title_playlist.'</option>'; 
+			endwhile; 
+		endif; 
+	echo '</select>';
+
+}
+
+function em_transcript( $post ) {
+	$em_transcript = get_post_meta( $post->ID, '_em_transcript', true );
+	wp_nonce_field( 'em_transcript-save_' . $post->ID, 'em_transcript-nonce' );
+	wp_editor($em_transcript, 'transcript', array( 'media_buttons' => false ) );
+}
+
+function em_information( $post ) {
+	$em_information = get_post_meta( $post->ID, '_em_information', true );
+	wp_nonce_field( 'em_information-save_' . $post->ID, 'em_information-nonce' );
+	wp_editor($em_information, 'information', array( 'media_buttons' => false ) );
 }
 
 function em_url( $post ) {
@@ -173,11 +221,7 @@ function em_url( $post ) {
 	echo '<input type="text" size="100" name="em_url" value="' . $em_url . '"><br />';
 }
 
-function em_transcript( $post ) {
-	$em_transcript = get_post_meta( $post->ID, '_em_transcript', true );
-	wp_nonce_field( 'em_transcript-save_' . $post->ID, 'em_transcript-nonce' );
-	wp_editor($em_transcript, 'transcript', array( 'media_buttons' => false ) );
-}
+
 
 function em_retrieve( $post ) {
 	//Retrieve from Jamendo
