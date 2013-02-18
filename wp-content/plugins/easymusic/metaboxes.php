@@ -190,3 +190,39 @@ function em_retrieve( $post ) {
 	wp_enqueue_script( 'get-jamendo' );
 	wp_enqueue_script( 'jquery' );
 }
+
+function em_area(){
+	echo '<div id="em-import-box" class="em-import-box" style="display:none;"><div class="em-import-content media-modal wp-core-ui">';
+
+		//close
+		echo '<a class="media-modal-close" id="em-close-area" href="#" title="' . __( 'Close', 'em' ) . '"><span class="media-modal-icon"></span></a>';
+
+		//menu
+		echo '<div class="media-frame-menu">';
+			echo '<div class="media-menu">';
+				echo '<a href="#" class="media-menu-item active">' . __( 'Select a song, then chose import options', 'em' ) . '</a>';
+				echo '<div class="separator"></div>';
+				
+				echo '<div class="em-import-sidebar"><ul>';
+					echo '<li><input type="checkbox" value="all" id="em-import-all"> <label for="em-import-all">' . __( 'Import all information', 'em' ) . '</label></li>';
+				echo '</ul>';
+
+				echo '<button id="em-launch-import" class="em-launch-button button button-primary button-large">' . __( 'Import', 'em' ) . '</button></div>';
+			echo '</div>';
+		echo '</div>';
+
+		//titre
+		echo '<div class="media-frame-title em-import-title"><h1>' . __( 'Import from Jamendo', 'em' ) . '</h1></div>';
+
+		//content
+		echo '<div id="em-import-content" class="media-frame-content"></div>';
+
+	echo '</div><div class="em-backdrop media-modal-backdrop"></div></div>';
+}
+add_action( 'admin_footer', 'em_area' );
+
+function em_load_admin_scripts(){
+	wp_register_style( 'em-admin-style', EM_PLUGIN_URL . '/css/admin-style.css', false, '1.0', 'all' );
+	wp_enqueue_style( 'em-admin-style' );
+}
+add_action( 'admin_enqueue_scripts', 'em_load_admin_scripts' );
