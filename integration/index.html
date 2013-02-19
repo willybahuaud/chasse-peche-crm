@@ -35,8 +35,8 @@
 			<div class="em-controls">
 				<a href="" class="em-toggle-playlist"></a>
 				<a  href="" class="em-prev"></a>
-				<a  href="" class="em-play"></a>
-				<a  href="" class="em-next"></a>
+				<a   onclick="play(42702789); return false;"  class="em-play"></a>
+				<a    onclick="pause(); return false;" class="em-next"></a>
 				<div class="em-volume-control">
 					<a href="" class="em-volume-icon em-volume-1"></a>
 					<div class="em-volume-wrapper">
@@ -51,7 +51,62 @@
 			</div>
 		</div>
 
+		
+			<input type="text" id="search">
+			<input type="submit" onclick="search(); return false;">
+		<ul id="results">
+			
+		</ul>
+		
 	</section>
+
+
+	<script src="http://connect.soundcloud.com/sdk.js"></script>
+	<script>
+		
+		function search()
+		{
+
+		    var search =document.getElementById('search').value;
+		    var results =document.getElementById('results');
+		    results.innerHTML="";
+		    SC.initialize({
+		  		client_id: 'cc1adde6d38da9d175c6959e26752262'
+			});
+		  	SC.get('/tracks', { q: search}, function(tracks) {
+  				
+  				for(var i=0;i<tracks.length;i++)
+					 {
+					   console.log(tracks[i].title + " - " + tracks[i].user.username + " image: " + tracks[i].artwork_url);
+					   var li=document.createElement("li");
+					   li.innerHTML="<a onclick='play("+tracks[i].id+"); return false;'>Play</a> - "+tracks[i].title + " - " + tracks[i].user.username + " image: <img src='" + tracks[i].artwork_url +"' />";
+					   results.appendChild(li);
+					 }
+			});
+		   
+		}
+
+		var sound;
+
+		function play(id)
+		{
+			SC.initialize({
+				client_id: 'cc1adde6d38da9d175c6959e26752262'
+			});
+
+
+			SC.stream("/tracks/"+id, function(sound){	
+   				sound.play();
+				console.log(sound);
+			});
+
+		}
+
+		function pause()
+		{
+			SC.stream().pause();
+		}
+	</script>
 
 </body>
 </html>
