@@ -13,6 +13,7 @@ function em_create_metaboxes() {
 	add_meta_box( 'em_information', __( 'Informations sur la playlist', 'em' ), 'em_information', apply_filters( 'em_post_type', 'playlists' ), 'normal', 'default' );
 	add_meta_box( 'em_retrieve', __( 'Retrieve songs from Jamendo', 'em' ), 'em_retrieve', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
 	add_meta_box( 'em_playlist', __( 'Playlists liées', 'em' ), 'em_playlist', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
+	add_meta_box( 'em_song_link', __( 'Chansons de la playlist', 'em'), 'em_song_link', apply_filters( 'em_post_type', 'playlists' ), 'side', 'high' );
 }
 add_action("admin_init", "em_create_metaboxes");
 
@@ -114,29 +115,35 @@ function em_save_metaboxes( $post_ID ) {
 
 		check_admin_referer( 'em_playlist-save_' . $_POST[ 'post_ID' ], 'em_playlist-nonce' );
 			
-			$args = array(
-          'order'           => 'ASC',
-          'post_type'       => 'post',
-          'post_status'     => 'publish',
-          'posts_per_page'  => '',
-          'category_name'   => 'em_playlist',
-          'meta_key'        => 'em_playlist',
-        );
+		// $args = array(
+  //         'order'           => 'ASC',
+  //         'post_type'       => 'post',
+  //         'post_status'     => 'publish',
+  //         'posts_per_page'  => '',
+  //         'category_name'   => 'em_playlist',
+  //         'meta_key'        => 'em_playlist',
+  //       );
 
-		$my_query = null;
-        $my_query = new WP_Query($args);
-        while ($my_query->have_posts()) : $my_query->the_post();
-            $postid = get_the_ID();
-            update_post_meta( $post_ID, '_em_playlist', $_POST['em_playlist' . $postid]  );
-        endwhile;
+		// $my_query = null;
+  //       $my_query = new WP_Query($args);
+  //       while ($my_query->have_posts()) : $my_query->the_post();
+  //           $postid = get_the_ID();
+  //           update_post_meta( $post_ID, '_em_playlist', $_POST['em_playlist' . $postid]  );
+  //       endwhile;
 
 			
-			// $playlist = sanitize_text_field( $_POST[ 'em_playlist' ] );
-			// update_post_meta( $post_ID, '_em_playlist', $playlist );
+			$playlist = sanitize_text_field( $_POST[ 'em_playlist' ] );
+			update_post_meta( $post_ID, '_em_playlist', $playlist );
 		}
 
 ////////////////////////////////////////////////
-		
+
+		if( isset( $_POST[ 'em_song_link' ] ) ) {
+			check_admin_referer( 'em_song_link-save_' . $_POST[ 'post_ID' ], 'em_song_link-nonce' );
+			$em_song_link = sanitize_text_field( $_POST[ 'em_song_link' ] );
+			update_post_meta( $post_ID, '_em_song_link', $em_song_link );
+		}
+
 		if( isset( $_POST[ 'information' ] ) ) {
 			check_admin_referer( 'em_information-save_' . $_POST[ 'post_ID' ], 'em_information-nonce' );
 			$information = sanitize_text_field( $_POST[ 'information' ] );
@@ -192,8 +199,40 @@ function em_songs($post){
 
 }
 
+function em_song_link ( $post ){
+
+	$em_song_link = get_post_meta( $post->ID, '_em_song_link', true );
+	// print_r($em_song_link);
+	wp_nonce_field( 'em_song_link-save_' . $post->ID, 'em_song_link-nonce' );
+
+
+	$songs = array(
+		'post_type'=>'songs',
+		'meta_key'=>'_em_playlist',
+		'meta_query'=>array(
+			array(
+				'key'=>'_em_playlist',
+				'value' => $post->ID,
+				'compare'=> '=',
+				)
+			)
+		);
+
+	 $query = new WP_Query($songs);
+
+		echo'<ul>';
+
+		while ( $query->have_posts() ) :
+		$query->the_post();
+		echo '<li class="tag_playlist">'.get_the_title().'</li>'; 
+		endwhile;
+		echo '</ul>';
+
+
+}
+
 function em_playlist ( $post ){
-	echo "Liste des playlists liées<br />";
+	// echo "Liste des playlists liées<br />";
 	$em_playlist = get_post_meta( $post->ID, '_em_playlist', false );
 	wp_nonce_field( 'em_playlist-save_' . $post->ID, 'em_playlist-nonce' );
 
@@ -201,7 +240,8 @@ function em_playlist ( $post ){
 	if( ! empty($em_playlist) ):
 	foreach($em_playlist as $p) :
 		$title_playlist = get_the_title($p);
-		echo '<div class="tag_playlist">'.$title_playlist.'</div>'; 
+		// echo '<br />';
+		echo '<div class="tag_playlist" style="background:#dedede; border-radius:5px; padding:5px; border:1px solid #888; width:95%;">'.$title_playlist.'</div>'; 
 	endforeach; 
 	endif;
 
@@ -221,6 +261,8 @@ function em_playlist ( $post ){
 	echo '</select>';
 
 }
+
+
 
 function em_transcript( $post ) {
 	$em_transcript = get_post_meta( $post->ID, '_em_transcript', true );
