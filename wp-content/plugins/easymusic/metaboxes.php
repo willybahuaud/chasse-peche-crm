@@ -109,9 +109,9 @@ function em_save_metaboxes( $post_ID ) {
 		}
 
 
-		if( isset( $_POST[ 'playlist' ] ) ) {
+		if( isset( $_POST[ 'em_playlist' ] ) ) {
 			check_admin_referer( 'em_playlist-save_' . $_POST[ 'post_ID' ], 'em_playlist-nonce' );
-			$playlist = sanitize_text_field( $_POST[ 'playlist' ] );
+			$playlist = sanitize_text_field( $_POST[ 'em_playlist' ] );
 			update_post_meta( $post_ID, '_em_playlist', $playlist );
 		}
 
@@ -172,16 +172,14 @@ function em_songs($post){
 
 function em_playlist ( $post ){
 	echo "Liste des playlists liées<br />";
-	$em_playlist = get_post_meta( $post->ID, '_em_playlist', true );
+	$em_playlist = get_post_meta( $post->ID, '_em_playlist', false );
 	wp_nonce_field( 'em_playlist-save_' . $post->ID, 'em_playlist-nonce' );
 
 	//REQUETE QUI RECUPERE LES PLAYLISTS LIEES A LA CHANSON
-
-	if($em_playlist):
-
+	if( ! empty($em_playlist) ):
 	foreach($em_playlist as $p) :
-			$title_playlist = get_the_title($p);
-			echo '<div class="tag_playlist">'.$title_playlist.'</div>'; 
+		$title_playlist = get_the_title($p);
+		echo '<div class="tag_playlist">'.$title_playlist.'</div>'; 
 	endforeach; 
 	endif;
 
@@ -191,14 +189,13 @@ function em_playlist ( $post ){
 
 	//REQUETE QUI RECUPERE LES PLAYLISTS POUR LA LIAISON 
 
-	query_posts('posts_per_page=-1&post_type=playlists');
-	echo '<select style="width:250px;">'; // JE SAIS C CRADE
-	  	if (have_posts()) : 
-		    while (have_posts()) : the_post(); 
-				$title_playlist = the_title('','',false);
-				echo '<option name="em_playlist" value="'.$title_playlist.'">'.$title_playlist.'</option>'; 
-			endwhile; 
-		endif; 
+	$playlists = get_posts('posts_per_page=-1&post_type=playlists');
+	echo '<select style="width:250px;" name="em_playlist">'; // JE SAIS C CRADE
+	if($playlists):
+	  	foreach($playlists as $p) :
+				echo '<option value="'.$p->ID.'">'.$p->post_title.'</option>'; 
+		endforeach; 
+	endif;
 	echo '</select>';
 
 }
