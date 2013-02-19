@@ -103,14 +103,14 @@ function em_save_metaboxes( $post_ID ) {
 		}
 
 		if( isset( $_POST[ 'transcript' ] ) ) {
-			check_admin_referer( 'em_songs-save_' . $_POST[ 'post_ID' ], 'em_songs-nonce' );
+			check_admin_referer( 'em_transcript-save_' . $_POST[ 'post_ID' ], 'em_transcript-nonce' );
 			$transcript = sanitize_text_field( $_POST[ 'transcript' ] );
 			update_post_meta( $post_ID, '_em_transcript', $transcript );
 		}
 
 
 		if( isset( $_POST[ 'playlist' ] ) ) {
-			check_admin_referer( 'em_songs-save_' . $_POST[ 'post_ID' ], 'em_songs-nonce' );
+			check_admin_referer( 'em_playlist-save_' . $_POST[ 'post_ID' ], 'em_playlist-nonce' );
 			$playlist = sanitize_text_field( $_POST[ 'playlist' ] );
 			update_post_meta( $post_ID, '_em_playlist', $playlist );
 		}
@@ -122,7 +122,7 @@ function em_save_metaboxes( $post_ID ) {
 		}
 
 		if( isset( $_POST[ 'em_url' ] ) ) {
-			check_admin_referer( 'em_songs-save_' . $_POST[ 'post_ID' ], 'em_songs-nonce' );
+			check_admin_referer( 'em_url-save_' . $_POST[ 'post_ID' ], 'em_url-nonce' );
 			$url = sanitize_text_field( $_POST[ 'em_url' ] );
 			update_post_meta( $post_ID, '_em_url', $url );
 		}
@@ -177,13 +177,13 @@ function em_playlist ( $post ){
 
 	//REQUETE QUI RECUPERE LES PLAYLISTS LIEES A LA CHANSON
 
-	query_posts('post_per_page=-1&post_type=songs');
-		  	if (have_posts()) : 
-		    while (have_posts()) : the_post(); 
-				$title_playlist = the_title('','',false);
-				echo '<div class="tag_playlist">'.$em_playlist.'</div>'; 
-			endwhile; 
-		endif; 
+	if($em_playlist):
+
+	foreach($em_playlist as $p) :
+			$title_playlist = get_the_title($p);
+			echo '<div class="tag_playlist">'.$title_playlist.'</div>'; 
+	endforeach; 
+	endif;
 
 	echo '<hr>';
 
