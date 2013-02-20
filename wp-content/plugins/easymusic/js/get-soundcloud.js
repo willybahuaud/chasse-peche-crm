@@ -42,8 +42,8 @@ jQuery(document).ready(function($){
 
 				//EXPLODE DE L'OBJET RETOURNÉ
 				for(var i=0;i<tracks.length;i++) {
-					out += '<label class="song-to-insert clb">';
-						out += '<input type="radio" name="song-to-insert" value="' + tracks[i].id + '" class="insert-checkbox">';
+					out += '<input type="radio" name="song-to-insert" id="song' + tracks[i].id + '" value="' + tracks[i].id + '" class="insert-checkbox">';
+					out += '<label class="song-to-insert clb" for="song' + tracks[i].id + '">';
 						if( ! isset( tracks[i].artwork_url ) ) tracks[i].artwork_url = emsc['defaultImg'];
 						out += '<img src="' + tracks[i].artwork_url + '" class="insert-img">';
 						out += '<div class="insert-name">' + tracks[i].title + '</div>';
@@ -58,29 +58,30 @@ jQuery(document).ready(function($){
 		} else if( searchType == 'user') {
 			// -> USERS'S SONGS
 			SC.get('/users', { q: searchQuery}, function(users) {
-				// console.log(tracks);
+
 				//PREPARE OUTPUT
-				// console.log(users);
 				out += '<div id="output-search" class="output-search">';
 
 				//EXPLODE DE L'OBJET RETOURNÉ
 				for(var i=0;i<users.length;i++) {
+
+					//T'AS QUOI EN STOCK, GAMIN ?
 					SC.get('/users/' + users[i].id + '/tracks',{limit: 1},function(tracks) {
-						// console.log(tracks);
+
 						for(var j=0;j<tracks.length;j++) {
-							out += '<label class="song-to-insert clb">';
-								out += '<input type="radio" name="song-to-insert" value="' + tracks[j].id + '" class="insert-checkbox">';
+							out += '<input type="radio" name="song-to-insert" id="song' + tracks[j].id + '" value="' + tracks[j].id + '" class="insert-checkbox">';
+							out += '<label class="song-to-insert clb" for="song' + tracks[j].id + '">';
 								if( ! isset( tracks[j].artwork_url ) ) tracks[j].artwork_url = emsc['defaultImg'];
 								out += '<img src="' + tracks[j].artwork_url + '" class="insert-img">';
 								out += '<div class="insert-name">' + tracks[j].title + '</div>';
 							out += '</label>';
+						}
 
-							if(i == users.length && j == tracks.length) {
-								//PRINT OUTPUT
-								out += '</div>';
-								$importbox.show();
-								$contentbox.html(out);
-							}
+						if(i == users.length) {
+							//PRINT OUTPUT
+							out += '</div>';
+							$importbox.show();
+							$contentbox.html(out);
 						}
 					});
 				}

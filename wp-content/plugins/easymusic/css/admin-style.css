@@ -47,3 +47,6 @@ FENETRE D'INSERTION DE CHANSONS
 	height:100px;
 }
 .insert-name{}
+.insert-checkbox:checked + .song-to-insert{
+	border-color:rgb(58, 163, 223);
+}
