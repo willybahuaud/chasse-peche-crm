@@ -109,34 +109,19 @@ function em_save_metaboxes( $post_ID ) {
 			update_post_meta( $post_ID, '_em_transcript', $transcript );
 		}
 
-// C'EST ICI QUE TOUT SE PASSE ... OU PAS 
+ 
 
 		if( isset( $_POST[ 'em_playlist' ] ) ) {
 
 		check_admin_referer( 'em_playlist-save_' . $_POST[ 'post_ID' ], 'em_playlist-nonce' );
 			
-		// $args = array(
-  //         'order'           => 'ASC',
-  //         'post_type'       => 'post',
-  //         'post_status'     => 'publish',
-  //         'posts_per_page'  => '',
-  //         'category_name'   => 'em_playlist',
-  //         'meta_key'        => 'em_playlist',
-  //       );
-
-		// $my_query = null;
-  //       $my_query = new WP_Query($args);
-  //       while ($my_query->have_posts()) : $my_query->the_post();
-  //           $postid = get_the_ID();
-  //           update_post_meta( $post_ID, '_em_playlist', $_POST['em_playlist' . $postid]  );
-  //       endwhile;
-
-			
-			$playlist = sanitize_text_field( $_POST[ 'em_playlist' ] );
+			$playlist = get_post_meta($post_ID, '_em_playlist', true);
+			if(!$playlist)$playlist = array();
+			$playlist[] = sanitize_text_field( $_POST[ 'em_playlist' ] );
 			update_post_meta( $post_ID, '_em_playlist', $playlist );
 		}
 
-////////////////////////////////////////////////
+
 
 		if( isset( $_POST[ 'em_song_link' ] ) ) {
 			check_admin_referer( 'em_song_link-save_' . $_POST[ 'post_ID' ], 'em_song_link-nonce' );
@@ -233,7 +218,7 @@ function em_song_link ( $post ){
 
 function em_playlist ( $post ){
 	// echo "Liste des playlists liées<br />";
-	$em_playlist = get_post_meta( $post->ID, '_em_playlist', false );
+	$em_playlist = get_post_meta( $post->ID, '_em_playlist', true );
 	wp_nonce_field( 'em_playlist-save_' . $post->ID, 'em_playlist-nonce' );
 
 	//REQUETE QUI RECUPERE LES PLAYLISTS LIEES A LA CHANSON
