@@ -124,11 +124,16 @@ include( EM_PLUGIN_PATH . 'metaboxes.php');
 CONNEXION SOUNDCLOUD
 */
 function em_connexion_sound_cloud() {
-	// wp_register_script(
-	// 	'connectsound',
-	// 	plugins_url('/js/connectsound.js', __FILE__),
-	// 	array( 'jquery' ), '1.0', true
-	// );
+	wp_register_script(
+		'soundcloud',
+		'http://connect.soundcloud.com/sdk.js',
+		false, '1.0', true
+	);
+	wp_register_script(
+		'get-soundcloud',
+		EM_PLUGIN_URL . '/js/get-soundcloud.js',
+		array( 'soundcloud', 'jquery' ), '1.0', true
+	);
 	wp_register_script(
 		'get-jamendo',
 		EM_PLUGIN_URL . '/js/get-jamendo.js',

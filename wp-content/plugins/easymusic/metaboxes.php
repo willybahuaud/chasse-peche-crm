@@ -11,7 +11,7 @@ function em_create_metaboxes() {
 	add_meta_box( 'em_transcript', __( 'Lyrics', 'em' ), 'em_transcript', apply_filters( 'em_post_type', 'songs' ), 'normal', 'default' );
 	add_meta_box( 'em_url', __( 'Chemin', 'em' ), 'em_url', apply_filters( 'em_post_type', 'songs' ), 'normal', 'default' );
 	add_meta_box( 'em_information', __( 'Informations sur la playlist', 'em' ), 'em_information', apply_filters( 'em_post_type', 'playlists' ), 'normal', 'default' );
-	add_meta_box( 'em_retrieve', __( 'Retrieve songs from Jamendo', 'em' ), 'em_retrieve', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
+	add_meta_box( 'em_retrieve', __( 'Retrieve songs from SoundCloud', 'em' ), 'em_retrieve', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
 	add_meta_box( 'em_playlist', __( 'Playlists liées', 'em' ), 'em_playlist', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
 	add_meta_box( 'em_song_link', __( 'Chansons de la playlist', 'em'), 'em_song_link', apply_filters( 'em_post_type', 'playlists' ), 'side', 'high' );
 }
@@ -276,8 +276,12 @@ function em_retrieve( $post ) {
 	echo '<p><input type="radio" name="search-type" class="search-type" id="search-type-track" value="track" checked> <label for="search-type-track">' . __( 'Songs', 'em' ) . '</label><br/>';
 	echo '<input type="radio" name="search-type" class="search-type" id="search-type-album" value="album"> <label for="search-type-album">' . __( 'Album', 'em' ) . '</label><br/>';
 	echo '<input type="radio" name="search-type" class="search-type" id="search-type-artist" value="artist"> <label for="search-type-artist">' . __( 'Artist', 'em' ) . '</label></p>';
-	echo '<button id="search-to-jamendo" class="button-secondary">' . __( 'Search to Jamendo', 'em' ) . '</button>';
-	wp_enqueue_script( 'get-jamendo' );
+	echo '<button id="search-to-soundcloud" class="button-secondary">' . __( 'Search to SoundCloud', 'em' ) . '</button>';
+	// wp_enqueue_script( 'get-jamendo' );
+	wp_enqueue_script( 'get-soundcloud' );
+	wp_localize_script( 'get-soundcloud', 'emsc', array(
+		'defaultImg' => EM_PLUGIN_URL . '/img/gifs_07.gif'
+		) );
 	wp_enqueue_script( 'jquery' );
 }
 
@@ -302,7 +306,7 @@ function em_area(){
 		echo '</div>';
 
 		//titre
-		echo '<div class="media-frame-title em-import-title"><h1>' . __( 'Import from Jamendo', 'em' ) . '</h1></div>';
+		echo '<div class="media-frame-title em-import-title"><h1>' . __( 'Import from SoundCloud', 'em' ) . '</h1></div>';
 
 		//content
 		echo '<div id="em-import-content" class="media-frame-content"></div>';
