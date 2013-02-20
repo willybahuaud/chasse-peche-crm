@@ -274,13 +274,13 @@ function em_retrieve( $post ) {
 	echo '<h2>' . __( 'What are you looking for ?', 'em' ) . '</h2>';
 	echo '<input type="search" style="width:100%;" id="em-search">';
 	echo '<p><input type="radio" name="search-type" class="search-type" id="search-type-track" value="track" checked> <label for="search-type-track">' . __( 'Songs', 'em' ) . '</label><br/>';
-	echo '<input type="radio" name="search-type" class="search-type" id="search-type-album" value="album"> <label for="search-type-album">' . __( 'Album', 'em' ) . '</label><br/>';
-	echo '<input type="radio" name="search-type" class="search-type" id="search-type-artist" value="artist"> <label for="search-type-artist">' . __( 'Artist', 'em' ) . '</label></p>';
+	echo '<input type="radio" name="search-type" class="search-type" id="search-type-artist" value="user"> <label for="search-type-artist">' . __( 'Users', 'em' ) . '</label></p>';
 	echo '<button id="search-to-soundcloud" class="button-secondary">' . __( 'Search to SoundCloud', 'em' ) . '</button>';
 	// wp_enqueue_script( 'get-jamendo' );
 	wp_enqueue_script( 'get-soundcloud' );
 	wp_localize_script( 'get-soundcloud', 'emsc', array(
-		'defaultImg' => EM_PLUGIN_URL . '/img/gifs_07.gif'
+		'defaultImg' => EM_PLUGIN_URL . '/img/gifs_07.gif',
+		'apikey'     => 'cc1adde6d38da9d175c6959e26752262'
 		) );
 	wp_enqueue_script( 'jquery' );
 }
