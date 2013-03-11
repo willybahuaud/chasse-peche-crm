@@ -11,7 +11,7 @@ function em_create_metaboxes() {
 	add_meta_box( 'em_transcript', __( 'Lyrics', 'em' ), 'em_transcript', apply_filters( 'em_post_type', 'songs' ), 'normal', 'default' );
 	add_meta_box( 'em_url', __( 'Chemin', 'em' ), 'em_url', apply_filters( 'em_post_type', 'songs' ), 'normal', 'default' );
 	add_meta_box( 'em_information', __( 'Informations sur la playlist', 'em' ), 'em_information', apply_filters( 'em_post_type', 'playlists' ), 'normal', 'default' );
-	add_meta_box( 'em_retrieve', __( 'Retrieve songs from SoundCloud', 'em' ), 'em_retrieve', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
+	add_meta_box( 'em_retrieve', __( 'Retrieve songs', 'em' ), 'em_retrieve', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
 	add_meta_box( 'em_playlist', __( 'Playlists liées', 'em' ), 'em_playlist', apply_filters( 'em_post_type', 'songs' ), 'side', 'high' );
 	add_meta_box( 'em_song_link', __( 'Chansons de la playlist', 'em'), 'em_song_link', apply_filters( 'em_post_type', 'playlists' ), 'side', 'high' );
 }
@@ -271,11 +271,17 @@ function em_url( $post ) {
 
 function em_retrieve( $post ) {
 	//Retrieve from Jamendo
+
+	//Retrieve from SoundCLoud
+	echo 'From SoundCloud';
 	echo '<h2>' . __( 'What are you looking for ?', 'em' ) . '</h2>';
 	echo '<input type="search" style="width:100%;" id="em-search">';
 	echo '<p><input type="radio" name="search-type" class="search-type" id="search-type-track" value="track" checked> <label for="search-type-track">' . __( 'Songs', 'em' ) . '</label><br/>';
 	echo '<input type="radio" name="search-type" class="search-type" id="search-type-artist" value="user"> <label for="search-type-artist">' . __( 'Users', 'em' ) . '</label></p>';
 	echo '<button id="search-to-soundcloud" class="button-secondary">' . __( 'Search to SoundCloud', 'em' ) . '</button>';
+
+	//Retrieve from Grooveshark
+
 	// wp_enqueue_script( 'get-jamendo' );
 	wp_enqueue_script( 'get-soundcloud' );
 	wp_localize_script( 'get-soundcloud', 'emsc', array(
