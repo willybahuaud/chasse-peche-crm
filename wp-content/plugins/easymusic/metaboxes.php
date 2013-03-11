@@ -281,6 +281,12 @@ function em_retrieve( $post ) {
 	echo '<button id="search-to-soundcloud" class="button-secondary">' . __( 'Search to SoundCloud', 'em' ) . '</button>';
 
 	//Retrieve from Grooveshark
+	echo 'From Grooveshark';
+	echo '<h2>' . __( 'What are you looking for ?', 'em' ) . '</h2>';
+	echo '<input type="search" style="width:100%;" id="em-search-gs">';
+	echo '<p><input type="radio" name="search-type-gs" class="search-type" id="search-type-track-gs" value="track" checked> <label for="search-type-track-gs">' . __( 'Songs', 'em' ) . '</label><br/>';
+	echo '<input type="radio" name="search-typgs" class="search-type" id="search-type-artist-gs" value="user"> <label for="search-type-artist-gs">' . __( 'Users', 'em' ) . '</label></p>';
+	echo '<button id="search-to-grooveshark" class="button-secondary">' . __( 'Search to Grooveshark', 'em' ) . '</button>';
 
 	// wp_enqueue_script( 'get-jamendo' );
 	wp_enqueue_script( 'get-soundcloud' );
@@ -288,6 +294,12 @@ function em_retrieve( $post ) {
 		'defaultImg' => EM_PLUGIN_URL . '/img/gifs_07.gif',
 		'apikey'     => 'cc1adde6d38da9d175c6959e26752262'
 		) );
+
+	wp_enqueue_script( 'get-grooveshark' );
+	wp_localize_script( 'get-grooveshark', 'emgs', array(
+		'defaultImg' => EM_PLUGIN_URL . '/img/gifs_07.gif'
+		) );
+
 	wp_enqueue_script( 'jquery' );
 }
 

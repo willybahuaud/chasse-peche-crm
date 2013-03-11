@@ -108,7 +108,7 @@ function em_register_cpt() {
 		'public' => true,
 		'hierarchical' => false
 		);
-	register_taxonomy('em_album', array( apply_filters( 'em_album_post_type', 'songs' ), apply_filters( 'em_songs_post_type', 'songs' ) ), apply_filters( 'em_album_args', $em_album_args ) );
+	register_taxonomy( 'em_album', array( apply_filters( 'em_album_post_type', 'songs' ), apply_filters( 'em_songs_post_type', 'songs' ) ), apply_filters( 'em_album_args', $em_album_args ) );
 
 	// ADD A SPECIFIC IMAGE SIZE
 	add_image_size( 'em-size', 100, 100, true );
@@ -139,7 +139,18 @@ function em_connexion_sound_cloud() {
 		EM_PLUGIN_URL . '/js/get-jamendo.js',
 		array( 'jquery' ), '1.0', true
 	);
+	wp_register_script(
+		'get-grooveshark',
+		EM_PLUGIN_URL . '/js/get-grooveshark.js',
+		array( 'jquery' ), '1.0', true
+	);
 	wp_enqueue_script( 'jquery' );
 }    
  
 add_action( 'admin_enqueue_scripts', 'em_connexion_sound_cloud' );
+
+
+/**
+GROOVESHARK API
+*/
+include( EM_PLUGIN_PATH . 'grooveshark/retrieveSongsFromGrooveshark.php');
