@@ -144,6 +144,11 @@ function em_connexion_sound_cloud() {
 		EM_PLUGIN_URL . '/js/get-grooveshark.js',
 		array( 'jquery' ), '1.0', true
 	);
+	wp_enqueue_script(
+		'em-tabs',
+		EM_PLUGIN_URL . '/js/tabs.js',
+		array( 'jquery', 'jquery-ui-tabs' ), '1.0', true
+		);
 	wp_enqueue_script( 'jquery' );
 }    
  

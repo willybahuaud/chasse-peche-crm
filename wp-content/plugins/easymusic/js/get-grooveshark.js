@@ -5,12 +5,14 @@ jQuery(document).ready(function($){
 	$(document).on('click','#search-to-grooveshark',function(e){
 		e.preventDefault();
 		var searchQuery = $('#em-search-gs').val();
+		var typeOfSearch = $('.search-type-gs:checked').val();
 		// var searchType = $('.search-type:checked').val();
 		$.ajax({
 			url: ajaxurl,
 			data:{
 				action: 'retrieveSongFromGrooveshark',
-				title: searchQuery
+				query: searchQuery,
+				typeofsearch: typeOfSearch
 			},
 			type:'POST',
 			success:function(data){

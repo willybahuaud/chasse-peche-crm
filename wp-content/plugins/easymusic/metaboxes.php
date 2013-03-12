@@ -270,23 +270,37 @@ function em_url( $post ) {
 
 
 function em_retrieve( $post ) {
-	//Retrieve from Jamendo
 
-	//Retrieve from SoundCLoud
-	echo 'From SoundCloud';
-	echo '<h2>' . __( 'What are you looking for ?', 'em' ) . '</h2>';
-	echo '<input type="search" style="width:100%;" id="em-search">';
-	echo '<p><input type="radio" name="search-type" class="search-type" id="search-type-track" value="track" checked> <label for="search-type-track">' . __( 'Songs', 'em' ) . '</label><br/>';
-	echo '<input type="radio" name="search-type" class="search-type" id="search-type-artist" value="user"> <label for="search-type-artist">' . __( 'Users', 'em' ) . '</label></p>';
-	echo '<button id="search-to-soundcloud" class="button-secondary">' . __( 'Search to SoundCloud', 'em' ) . '</button>';
+	echo '<div id="em-import-tabs" class="categorydiv">';
 
-	//Retrieve from Grooveshark
-	echo 'From Grooveshark';
-	echo '<h2>' . __( 'What are you looking for ?', 'em' ) . '</h2>';
-	echo '<input type="search" style="width:100%;" id="em-search-gs">';
-	echo '<p><input type="radio" name="search-type-gs" class="search-type" id="search-type-track-gs" value="track" checked> <label for="search-type-track-gs">' . __( 'Songs', 'em' ) . '</label><br/>';
-	echo '<input type="radio" name="search-typgs" class="search-type" id="search-type-artist-gs" value="user"> <label for="search-type-artist-gs">' . __( 'Users', 'em' ) . '</label></p>';
-	echo '<button id="search-to-grooveshark" class="button-secondary">' . __( 'Search to Grooveshark', 'em' ) . '</button>';
+	echo '<ul class="category-tabs">';
+	echo '    <li class="tabs"><a href="#soundcloud">SoundCloud</a></li>';
+	echo '    <li><a href="#grooveshark">Grooveshark</a></li>';
+	// echo '    <li><a href="#tabs-3">Third</a></li>';
+	echo '</ul>';
+
+		//Retrieve from Jamendo
+
+		//Retrieve from SoundCLoud
+		echo '<div id="soundcloud" class="tabs-panel">';
+			echo '<h4>' . __( 'What are you looking for ?', 'em' ) . '</h4>';
+			echo '<input type="search" style="width:100%;" id="em-search" placeholder="my search on SoundCloud...">';
+			echo '<p><input type="radio" name="search-type" class="search-type" id="search-type-track" value="track" checked> <label for="search-type-track">' . __( 'Songs', 'em' ) . '</label><br/>';
+			echo '<input type="radio" name="search-type" class="search-type" id="search-type-artist" value="user"> <label for="search-type-artist">' . __( 'Users', 'em' ) . '</label></p>';
+			echo '<button id="search-to-soundcloud" class="button-secondary" style="margin-bottom:1em;">' . __( 'Search to SoundCloud', 'em' ) . '</button>';
+		echo '</div>';
+
+		//Retrieve from Grooveshark
+		echo '<div id="grooveshark" class="tabs-panel" style="display:none;">';
+			echo '<h4>' . __( 'What are you looking for ?', 'em' ) . '</h4>';
+			echo '<input type="search" style="width:100%;" id="em-search-gs" placeholder="my search on Grooveshark...">';
+			echo '<p><input type="radio" name="search-type-gs" class="search-type-gs" id="search-type-track-gs" value="title" checked> <label for="search-type-track-gs">' . __( 'Title', 'em' ) . '</label><br/>';
+			echo '<input type="radio" name="search-type-gs" class="search-type-gs" id="search-type-artist-gs" value="artist"> <label for="search-type-artist-gs">' . __( 'Artist', 'em' ) . '</label><br/>';
+			echo '<input type="radio" name="search-type-gs" class="search-type-gs" id="search-type-album-gs" value="album"> <label for="search-type-album-gs">' . __( 'Album', 'em' ) . '</label></p>';
+			echo '<button id="search-to-grooveshark" class="button-secondary" style="margin-bottom:1em;">' . __( 'Search to Grooveshark', 'em' ) . '</button>';
+		echo '</div>';
+
+	echo '</div>';
 
 	// wp_enqueue_script( 'get-jamendo' );
 	wp_enqueue_script( 'get-soundcloud' );
@@ -301,6 +315,9 @@ function em_retrieve( $post ) {
 		) );
 
 	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'jquery-ui-tabs' );
+	wp_enqueue_script( 'em-tabs' );
+
 }
 
 function em_area(){

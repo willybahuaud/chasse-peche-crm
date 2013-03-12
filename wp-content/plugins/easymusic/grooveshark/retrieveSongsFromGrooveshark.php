@@ -26,15 +26,16 @@ function em_retrieveSongsFromGrooveshark(){
 	WHAT DID I WANT TO SEARCH ?
 	* @uses album ? artist ? title ?
 	*/
-	if( isset( $_POST[ 'title' ] ) )
-		$gsSearch->setTitle( $_POST[ 'title' ] );
-
-	if( isset( $_POST[ 'artist' ] ) )
-		$gsSearch->setArtist( $_POST[ 'artist' ] );
-
-	if( isset( $_POST[ 'album' ] ) )
-		$gsSearch->setAlbum( $_POST[ 'album' ] );
-
+	switch( $_POST[ 'typeofsearch' ]) {
+		case 'title':
+			$gsSearch->setTitle( $_POST[ 'query' ] );
+			break;
+		case 'artist':
+			$gsSearch->setArtist( $_POST[ 'query' ] );
+			break;
+		default:
+			$gsSearch->setAlbum( $_POST[ 'query' ] );
+	}
 	$results = $gsSearch->songSearchResults();
 
 	echo json_encode( $results );
