@@ -311,7 +311,9 @@ function em_retrieve( $post ) {
 
 	wp_enqueue_script( 'get-grooveshark' );
 	wp_localize_script( 'get-grooveshark', 'emgs', array(
-		'defaultImg' => EM_PLUGIN_URL . '/img/gifs_07.gif'
+		'defaultImg' => EM_PLUGIN_URL . '/img/gifs_07.gif',
+		'artist'     => __( 'Artist', 'em' ),
+		'album'      => __( 'Album', 'em' )
 		) );
 
 	wp_enqueue_script( 'jquery' );

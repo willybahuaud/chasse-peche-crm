@@ -16,7 +16,7 @@ jQuery(document).ready(function($){
 			},
 			type:'POST',
 			success:function(data){
-				console.log(data);
+				// console.log(data);
 				var obj = jQuery.parseJSON(data);
 				var out = new String;
 				for(var i = 0; i < obj.length; i++){
@@ -27,6 +27,8 @@ jQuery(document).ready(function($){
 							else obj[i].CoverArtFilename = 'http://images.gs-cdn.net/static/albums/120_' + obj[i].CoverArtFilename;
 							out += '<img src="' + obj[i].CoverArtFilename + '" class="insert-img">';
 							out += '<div class="insert-name">' + obj[i].SongName + '</div>';
+							out += '<div class="artist-name">' + emgs['artist'] +' : ' + obj[i].ArtistName + '</div>';
+							out += '<div class="album-name">' + emgs['album']+' : ' + obj[i].AlbumName + '</div>';
 						out += '</label>';
 					out += '</div>';
 

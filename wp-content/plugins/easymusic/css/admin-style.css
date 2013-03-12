@@ -46,7 +46,11 @@ FENETRE D'INSERTION DE CHANSONS
 	width:100px;
 	height:100px;
 }
-.insert-name{}
+.insert-name{font-weight:bold;}
+.artist-name,
+.album-name{
+	font-size:0.9em;
+}
 .insert-checkbox:checked + .song-to-insert{
 	border-color:rgb(58, 163, 223);
 }
